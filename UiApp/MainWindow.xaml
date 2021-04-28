@@ -1,0 +1,14 @@
+﻿<Window x:Class="UiApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UiApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button Content="Submit" HorizontalAlignment="Left" Height="78" Margin="322,273,0,0" VerticalAlignment="Top" Width="103" Click="Button_Click"/>
+        <Label x:Name="Label1" Content="Label" HorizontalAlignment="Center" Height="46" Margin="0,141,0,0" VerticalAlignment="Top" Width="50"/>
+        <TextBox x:Name="Order_Number" HorizontalAlignment="Left" Margin="95,199,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+    </Grid>
+</Window>

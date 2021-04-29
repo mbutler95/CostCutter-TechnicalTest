@@ -28,11 +28,15 @@ namespace UiApp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        Order Order_Details;
+        private Order _order_details;
+        public Order Order_Details { get => _order_details; set { _order_details = value; OnPropertyChanged("Order_Details"); } }
 
-        Customer Customer_Details;
+        private Customer _customer_details;
 
-        Branch Branch_Details;
+        public Customer Customer_Details { get => _customer_details; set { _customer_details = value; OnPropertyChanged("Customer_Details"); } }
+
+        private Branch _branch_details;
+        public Branch Branch_Details { get => _branch_details; set { _branch_details = value; OnPropertyChanged("Branch_Details"); } }
 
         public string Filter = "";
         
@@ -45,6 +49,11 @@ namespace UiApp
                 infomessage = value;
                 OnPropertyChanged("InfoMessage");
             }
+        }
+
+        internal void UpdateInfoLabel(string v)
+        {
+            InfoMessage = v;
         }
         #region Combobox Updating and Populating
 
@@ -60,6 +69,8 @@ namespace UiApp
                 OnPropertyChanged("ComboBoxEntries");
             }
         }
+
+        
 
         internal void PopulateTotalOrders()
         {
@@ -127,7 +138,6 @@ namespace UiApp
         
         public void Find(int order_number)
         {
-            InfoMessage = "";
             var dbConnection = new DatabaseConnector().GetConnection;
             try
             {

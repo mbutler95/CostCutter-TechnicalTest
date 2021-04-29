@@ -39,14 +39,14 @@ namespace UiApp
                 int searchnum = Int32.Parse(OrderComboBox.Text);
                 if (searchnum > 0 && searchnum < 30_000)
                 {
+                    DatabaseModel.UpdateInfoLabel("Finding Order Number " + searchnum);
                     DatabaseModel.Find(searchnum);
-                    InfoBox.Text = "Finding Order Number "+ searchnum;
                 }
                 else throw new FormatException();
             }
             catch (Exception)
             {
-                InfoBox.Text = "Invalid Search";
+                DatabaseModel.UpdateInfoLabel("Invalid Search");
             }
         }
 
@@ -55,7 +55,7 @@ namespace UiApp
             After.IsChecked = false;
             Before.IsChecked = false;
             DateSelector.SelectedDate = null;
-            InfoBox.Text = "";
+            DatabaseModel.UpdateInfoLabel("");
             OrderComboBox.Text = "";
             DatabaseModel.Filter = "";
             DatabaseModel.PopulateTotalOrders();
@@ -65,16 +65,16 @@ namespace UiApp
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
             DateTime SelectedDate;
-            try
+            if (DateSelector.SelectedDate != null)
             {
-                if (DateSelector.SelectedDate == null) throw new NullReferenceException();
                 SelectedDate = (DateTime)DateSelector.SelectedDate;
-                DatabaseModel.ApplyFilters(Before.IsChecked??false, After.IsChecked??false, SelectedDate);
+                DatabaseModel.ApplyFilters(Before.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
             }
-            catch (NullReferenceException)
+            else
             {
-                InfoBox.Text = "Enter a Date";
+                DatabaseModel.UpdateInfoLabel("Enter A Date");
             }
+            
             
         }
 

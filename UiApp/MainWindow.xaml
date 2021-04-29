@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UiApp" 
+        xmlns:local="clr-namespace:UiApp"
         d:DataContext="{d:DesignInstance Type=local:DatabaseConnector}"
         mc:Ignorable="d"
         Title="CostCutter Order Directory" Height="550" Width="600" ResizeMode="CanResizeWithGrip">
@@ -25,7 +25,7 @@
         <Button x:Name="Find_Button" HorizontalAlignment="Left" Content="Find" Margin="130,40,0,15" Grid.Row="1" Click="Find_Button_Click" 
                 Height="25" Width="60"/>
         <TextBlock x:Name="InfoBox" HorizontalAlignment="Center" Margin="0,27,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" 
-                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding InfoMessage, Mode=OneWay}"/>
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding InfoMessage}"/>
         <Expander Header="Filters" HorizontalAlignment="Left" Height="170" Margin="439,42,0,0" Grid.Row="1" VerticalAlignment="Top" Width="150" 
                   Grid.RowSpan="2">
             <Border BorderBrush="Black" BorderThickness="1">
@@ -43,7 +43,14 @@
         <!--#endregion-->
 
         <!--#region Grid Row 2-->
-
+        <TextBlock x:Name="OrderNumber" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow" 
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding Branch_Details.Branch_name}"/>
+        <TextBlock x:Name="OrderDate" HorizontalAlignment="Left" Margin="10,50,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow" 
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding Order_Details.Order_date}"/>
+        <TextBlock x:Name="SalePrice" HorizontalAlignment="Left" Margin="10,90,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow" 
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding Order_Details.Sale_price}"/>
+        <TextBlock x:Name="Deposit" HorizontalAlignment="Left" Margin="10,130,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow" 
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding Order_Details.Deposit}"/>
         <!--#endregion-->
 
 

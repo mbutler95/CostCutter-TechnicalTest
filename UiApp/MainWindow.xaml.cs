@@ -22,13 +22,43 @@ namespace UiApp
     {
         public MainWindow()
         {
+            this.DataContext = DatabaseModel;
+            DatabaseModel.PopulateTotalOrders();
             InitializeComponent();
+            
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private DatabaseConnector _databaseModel = new();
+
+        public DatabaseConnector DatabaseModel { get => _databaseModel; set => _databaseModel = value; }
+
+        private void Find_Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Window handler, tunneling down");
-            Database.Submit(1);
+            DatabaseModel.Find(1);
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            After.IsChecked = false;
+            Before.IsChecked = false;
+            DateSelector.SelectedDate = null;
+            DatabaseModel.ResetComboBox();
+        }
+
+        private void Apply_Click(object sender, RoutedEventArgs e)
+        {
+            DatabaseModel.ApplyFilters();
+        }
+
+        private void OrderComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            DatabaseModel.UpdateComboBox(OrderComboBox.Text);
+        }
+
+        private void OrderComboBox_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            MessageBox.Show("Oi Dipshit Text Input");
+            DatabaseModel.UpdateComboBox(OrderComboBox.Text);
         }
     }
 }

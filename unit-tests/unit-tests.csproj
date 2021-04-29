@@ -91,9 +91,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -101,9 +98,9 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ui\ui.csproj">
-      <Project>{917FBE16-26C5-4109-95A2-67222E82D061}</Project>
-      <Name>ui</Name>
+    <ProjectReference Include="..\UiApp\UiApp.csproj">
+      <Project>{cd2ad4fc-0402-4f20-a2ca-eaaf6fe872aa}</Project>
+      <Name>UiApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

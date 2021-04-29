@@ -9,7 +9,7 @@
         Title="CostCutter Order Directory" Height="550" Width="600" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.Resources>
-            
+
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="90"/>
@@ -19,13 +19,13 @@
         </Grid.RowDefinitions>
         <Canvas Grid.Row="0" Background="White" Margin="0,0,0,15"/>
         <!--#region Grid Row 1-->
-        <Label Content="Select Order Number     Displaying Max 100 Numbers" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="109"/>
+        <Label Content="Select Order Number" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="124"/>
         <ComboBox x:Name="OrderComboBox" Height="25" HorizontalAlignment="Left" Margin="10,40,0,15" Grid.Row="1" Width="110" IsEditable="True"
-                  ItemsSource="{Binding ComboBoxEntries}" StaysOpenOnEdit="True"  MaxDropDownHeight="120" TextBoxBase.TextChanged="OrderComboBox_TextChanged" TextInput="OrderComboBox_TextInput"/>
+                  ItemsSource="{Binding ComboBoxEntries}" StaysOpenOnEdit="True"  MaxDropDownHeight="120" TextBoxBase.TextChanged="OrderComboBox_TextChanged"/>
         <Button x:Name="Find_Button" HorizontalAlignment="Left" Content="Find" Margin="130,40,0,15" Grid.Row="1" Click="Find_Button_Click" 
                 Height="25" Width="60"/>
-        <TextBlock x:Name="ErrorBox" HorizontalAlignment="Center" Margin="0,27,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" 
-                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding Errormessage, Mode=OneWay}"/>
+        <TextBlock x:Name="InfoBox" HorizontalAlignment="Center" Margin="0,27,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" 
+                   VerticalAlignment="Top" Height="34" Width="202" Text="{Binding InfoMessage, Mode=OneWay}"/>
         <Expander Header="Filters" HorizontalAlignment="Left" Height="170" Margin="439,42,0,0" Grid.Row="1" VerticalAlignment="Top" Width="150" 
                   Grid.RowSpan="2">
             <Border BorderBrush="Black" BorderThickness="1">
@@ -41,11 +41,11 @@
         <Label Content="Filter results by date" HorizontalAlignment="Left" Height="27" Margin="439,10,0,0" Grid.Row="1" 
                VerticalAlignment="Top" Width="134"/>
         <!--#endregion-->
-        
+
         <!--#region Grid Row 2-->
-        
+
         <!--#endregion-->
 
-        
+
     </Grid>
 </Window>

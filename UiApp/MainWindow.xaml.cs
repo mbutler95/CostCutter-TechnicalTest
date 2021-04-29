@@ -34,7 +34,20 @@ namespace UiApp
 
         private void Find_Button_Click(object sender, RoutedEventArgs e)
         {
-            DatabaseModel.Find(1);
+            try
+            {
+                int searchnum = Int32.Parse(OrderComboBox.Text);
+                if (searchnum > 0 && searchnum < 30_000)
+                {
+                    DatabaseModel.Find(searchnum);
+                    InfoBox.Text = "Finding Order Number "+ searchnum;
+                }
+                else throw new FormatException();
+            }
+            catch (Exception)
+            {
+                InfoBox.Text = "Invalid Search";
+            }
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -42,22 +55,31 @@ namespace UiApp
             After.IsChecked = false;
             Before.IsChecked = false;
             DateSelector.SelectedDate = null;
-            DatabaseModel.ResetComboBox();
+            InfoBox.Text = "";
+            OrderComboBox.Text = "";
+            DatabaseModel.Filter = "";
+            DatabaseModel.PopulateTotalOrders();
+            DatabaseModel.DefaultComboBox();
         }
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            DatabaseModel.ApplyFilters();
+            DateTime SelectedDate;
+            try
+            {
+                if (DateSelector.SelectedDate == null) throw new NullReferenceException();
+                SelectedDate = (DateTime)DateSelector.SelectedDate;
+                DatabaseModel.ApplyFilters(Before.IsChecked??false, After.IsChecked??false, SelectedDate);
+            }
+            catch (NullReferenceException)
+            {
+                InfoBox.Text = "Enter a Date";
+            }
+            
         }
 
         private void OrderComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DatabaseModel.UpdateComboBox(OrderComboBox.Text);
-        }
-
-        private void OrderComboBox_TextInput(object sender, TextCompositionEventArgs e)
-        {
-            MessageBox.Show("Oi Dipshit Text Input");
             DatabaseModel.UpdateComboBox(OrderComboBox.Text);
         }
     }

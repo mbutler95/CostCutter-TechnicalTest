@@ -23,15 +23,27 @@ namespace UiApp
         public MySqlConnection GetConnection => new MySqlConnection(_ConnectionString);
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private string errormessage; 
-        public string Errormessage
+        protected void OnPropertyChanged(string name)
         {
-            get { return errormessage; }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        Order Order_Details;
+
+        Customer Customer_Details;
+
+        Branch Branch_Details;
+
+        public string Filter = "";
+        
+        private string infomessage; 
+        public string InfoMessage
+        {
+            get { return infomessage; }
             set
             {
-                errormessage = value;
-                OnPropertyChanged("Errormessage");
+                infomessage = value;
+                OnPropertyChanged("InfoMessage");
             }
         }
         #region Combobox Updating and Populating
@@ -51,12 +63,13 @@ namespace UiApp
 
         internal void PopulateTotalOrders()
         {
+            TotalOrderList = new();
             var dbConnection = new DatabaseConnector().GetConnection;
             IEnumerable<dynamic> result;
             try
             {
                 dbConnection.Open();
-                var sql = "SELECT order_number from orders ORDER BY order_number";
+                var sql = "SELECT order_number from orders "+ Filter + " ORDER BY order_number";
                 result = dbConnection.Query(sql).AsList();
                 foreach (var row in result)
                 {
@@ -65,21 +78,13 @@ namespace UiApp
             }
             catch (MySqlException)
             {
-                this.Errormessage = "Unable to esablish a Connection with the Server.";
+                InfoMessage = "Unable to esablish a Connection with the Server.";
             }
             finally
             {
                 dbConnection.Close();
             }
-            ////First Initialization of ComboBox////
-            this.ResetComboBox();
-        }
-
-        internal void ResetComboBox()
-        {
-            ObservableCollection<int> tempstorage = new();
-            for (int i = 0; i < 100; i++) tempstorage.Add(TotalOrderList[i]);
-            ComboBoxEntries = tempstorage;
+            DefaultComboBox();
         }
 
         internal void UpdateComboBox(string text)
@@ -88,7 +93,7 @@ namespace UiApp
             int i = 0;
             foreach (int num in TotalOrderList)
             {    
-                if(i < 100) 
+                if(i < 200) 
                 { 
                     string tester = "" + num;
                     if (tester.StartsWith(text))
@@ -104,33 +109,36 @@ namespace UiApp
             }
             ComboBoxEntries = tempstorage;
         }
-        #endregion
 
-        Order Order_Details;
-
-        Customer Customer_Details;
-
-        Branch Branch_Details;
-
-        protected void OnPropertyChanged(string name)
+        internal void DefaultComboBox()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            ObservableCollection<int> tempstorage = new();
+            if (TotalOrderList.Count > 200)
+            {
+                for (int i = 0; i < 200; i++) tempstorage.Add(TotalOrderList[i]);
+            }
+            else
+            {
+                for (int i = 0; i < TotalOrderList.Count; i++) tempstorage.Add(TotalOrderList[i]);
+            }
+             ComboBoxEntries = tempstorage;
         }
-
+        #endregion
+        
         public void Find(int order_number)
         {
-            this.Errormessage = "";
+            InfoMessage = "";
             var dbConnection = new DatabaseConnector().GetConnection;
             try
             {
                 dbConnection.Open();
-                this.FetchOrderDetails(order_number, dbConnection);
-                this.FetchCustomerDetails(this.Order_Details.Customer_number, dbConnection);
-                this.FetchBranchDetails(this.Order_Details.Employee_number, dbConnection);
+                FetchOrderDetails(order_number, dbConnection);
+                FetchCustomerDetails(Order_Details.Customer_number, dbConnection);
+                FetchBranchDetails(Order_Details.Employee_number, dbConnection);
             }
             catch (MySqlException)
             {
-                this.Errormessage = "Unable to esablish a Connection with the Server.";
+                InfoMessage = "Unable to esablish a Connection with the Server.";
             }
             finally
             {
@@ -139,11 +147,25 @@ namespace UiApp
             
         }
 
-        internal void ApplyFilters()
+        internal void ApplyFilters(bool before, bool after, DateTime selected_date)
         {
-            throw new NotImplementedException();
+            if(before)
+            {
+                Filter = "WHERE order_date <= '" + selected_date.ToString("yyyy-MM-dd") +"'";
+            }
+            else if(after)
+            {
+                Filter = "WHERE order_date >= '" + selected_date.ToString("yyyy-MM-dd") + "'";
+            }
+            else
+            {
+                Filter = "WHERE order_date = '" + selected_date.ToString("yyyy-MM-dd") + "'";
+            }
+            PopulateTotalOrders();
+            DefaultComboBox();
+            InfoMessage = "Found " + TotalOrderList.Count + " results matching filter";
         }
-        #region Database Fetch Logic
+        #region Database Query Logic
         public void FetchOrderDetails(int order_number, MySqlConnection dbConnection)
         {
             var sql = "SELECT * FROM orders WHERE order_number = " + order_number;

@@ -58,7 +58,6 @@ namespace UiApp
             DatabaseModel.Filter = "";
             FilterExpander.IsExpanded = false;
             DatabaseModel.PopulateTotalOrders();
-            DatabaseModel.DefaultComboBox();
         }
 
         private void Apply_Click(object sender, RoutedEventArgs e)

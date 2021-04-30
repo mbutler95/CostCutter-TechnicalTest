@@ -129,7 +129,7 @@ namespace UiApp
             {
                 for (int i = 0; i < TotalOrderList.Count; i++) tempstorage.Add(TotalOrderList[i]);
             }
-             ComboBoxEntries = tempstorage;
+            ComboBoxEntries = tempstorage;
         }
         internal void UpdateComboBox(string text)
         {
@@ -196,7 +196,6 @@ namespace UiApp
                 Filter = "WHERE order_date = '" + selected_date.ToString("yyyy-MM-dd") + "'";
             }
             PopulateTotalOrders();
-            DefaultComboBox();
             InfoMessage = "Found " + TotalOrderList.Count + " results matching filter!";
         }
         #region Database Query Logic

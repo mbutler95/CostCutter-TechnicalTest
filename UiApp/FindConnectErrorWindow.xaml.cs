@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace UiApp
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for FindConnectErrorWindow.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class FindConnectErrorWindow : Window
     {
-        public Window1()
+        public FindConnectErrorWindow()
         {
             InitializeComponent();
         }

@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
         <Canvas Grid.Row="0" Background="White" Margin="0,0,192,15"/>
         <!--#region Grid Row 2-->
-        <Rectangle HorizontalAlignment="Left" Height="70" Margin="5,0,0,0" Grid.Row="2" Stroke="Black" VerticalAlignment="Center" Width="420"/>
-        <Label Content="Select Order Number" HorizontalAlignment="Left" Height="30" Margin="10,7,0,0" Grid.Row="2" VerticalAlignment="Top" Width="124" RenderTransformOrigin="0.491,0.795"/>
+        <Rectangle HorizontalAlignment="Left" Height="70" Margin="5,0,0,0" Grid.Row="2"  VerticalAlignment="Center" Width="420" RadiusX="10" RadiusY="10" Stroke="#FF004E37" />
+        <Label Content="Select Order Number" HorizontalAlignment="Left" Height="30" Margin="10,7,0,0" Grid.Row="2" VerticalAlignment="Top" Width="124" />
         <Label Content="Filter results by date" HorizontalAlignment="Left" Height="28" Margin="273,8,0,0" Grid.Row="2" 
                VerticalAlignment="Top" Width="134"/>
         <ComboBox x:Name="OrderComboBox" HorizontalAlignment="Left" Margin="15,40,0,15" Grid.Row="2" Width="110" IsEditable="True"
@@ -48,7 +48,7 @@
         <!--#endregion-->
 
         <!--#region Grid Row 3-->
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="5,0,0,0" Grid.Row="3" Stroke="Black" VerticalAlignment="Center" Width="420"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="5,0,0,0" Grid.Row="3" Stroke="#FFE73742" VerticalAlignment="Center" Width="420" RadiusX="10" RadiusY="10"/>
         <Label Content="Order Details :" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="3" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Content="Order Number :" HorizontalAlignment="Left" Margin="10,25,0,0" Grid.Row="3" VerticalAlignment="Top"/>
         <TextBox x:Name="OrderNumber" HorizontalAlignment="Left" Margin="104,30,0,0" Grid.Row="3" TextWrapping="WrapWithOverflow" 
@@ -68,7 +68,7 @@
         <!--#endregion-->
 
         <!--#region Grid Row 4-->
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="5,0,0,0" Grid.Row="4" Stroke="Black" VerticalAlignment="Center" Width="420"/>
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="5,0,0,0" Grid.Row="4" Stroke="#FFE73742" VerticalAlignment="Center" Width="420" RadiusX="10" RadiusY="10"/>
         <Label Content="Customer Details :" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="4" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Content="Customer Number :" HorizontalAlignment="Left" Margin="10,25,0,0" Grid.Row="4" VerticalAlignment="Top"/>
         <TextBox x:Name="Customer_Number" HorizontalAlignment="Left" Margin="127,28,0,0" Grid.Row="4" TextWrapping="WrapWithOverflow" 
@@ -88,7 +88,7 @@
         <!--#endregion-->
 
         <!--#region Grid Row 5-->
-        <Rectangle HorizontalAlignment="Left" Height="60" Margin="6,5,0,0" Grid.Row="5" Stroke="Black" VerticalAlignment="Top" Width="420"/>
+        <Rectangle HorizontalAlignment="Left" Height="60" Margin="6,5,0,0" Grid.Row="5" Stroke="#FFE73742" VerticalAlignment="Top" Width="420" RadiusX="10" RadiusY="10"/>
         <Label Content="Branch Details :" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="5" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Content="Branch Name :" HorizontalAlignment="Left" Margin="10,25,0,0" Grid.Row="6" VerticalAlignment="Top"/>
         <TextBox x:Name="Branch_Name" HorizontalAlignment="Left" Margin="104,30,0,0" Grid.Row="5" TextWrapping="WrapWithOverflow" 

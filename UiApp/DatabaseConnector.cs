@@ -27,7 +27,7 @@ namespace UiApp
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
+        #region Database modelling class variables & properties
         private Order _order_details;
         public Order Order_Details { get => _order_details; set { _order_details = value; OnPropertyChanged("Order_Details"); } }
 
@@ -38,15 +38,29 @@ namespace UiApp
         private Branch _branch_details;
         public Branch Branch_Details { get => _branch_details; set { _branch_details = value; OnPropertyChanged("Branch_Details"); } }
 
-        public string Filter = "";
-        
-        private string infomessage; 
-        public string InfoMessage
+        #endregion
+
+        private string _filter;
+        public string Filter { get => _filter; set => _filter = value; }
+
+        private string _combobox_tooltip;
+        public string ComboBox_Tooltip
         {
-            get { return infomessage; }
+            get { return _combobox_tooltip; }
             set
             {
-                infomessage = value;
+                _combobox_tooltip = value;
+                OnPropertyChanged("ComboBox_ToolTip");
+            }
+        }
+
+        private string _infomessage; 
+        public string InfoMessage
+        {
+            get { return _infomessage; }
+            set
+            {
+                _infomessage = value;
                 OnPropertyChanged("InfoMessage");
             }
         }
@@ -69,8 +83,6 @@ namespace UiApp
                 OnPropertyChanged("ComboBoxEntries");
             }
         }
-
-        
 
         internal void PopulateTotalOrders()
         {
@@ -96,8 +108,29 @@ namespace UiApp
                 dbConnection.Close();
             }
             DefaultComboBox();
+            UpdateComboBoxTooltip();
         }
 
+        internal void ResetSearch()
+        {
+            Order_Details = null;
+            Customer_Details = null;
+            Branch_Details = null;
+        }
+
+        internal void DefaultComboBox()
+        {
+            ObservableCollection<int> tempstorage = new();
+            if (TotalOrderList.Count > 200)
+            {
+                for (int i = 0; i < 200; i++) tempstorage.Add(TotalOrderList[i]);
+            }
+            else
+            {
+                for (int i = 0; i < TotalOrderList.Count; i++) tempstorage.Add(TotalOrderList[i]);
+            }
+             ComboBoxEntries = tempstorage;
+        }
         internal void UpdateComboBox(string text)
         {
             ObservableCollection<int> tempstorage = new();
@@ -119,20 +152,11 @@ namespace UiApp
                 }
             }
             ComboBoxEntries = tempstorage;
+            UpdateComboBoxTooltip();
         }
-
-        internal void DefaultComboBox()
+        internal void UpdateComboBoxTooltip()
         {
-            ObservableCollection<int> tempstorage = new();
-            if (TotalOrderList.Count > 200)
-            {
-                for (int i = 0; i < 200; i++) tempstorage.Add(TotalOrderList[i]);
-            }
-            else
-            {
-                for (int i = 0; i < TotalOrderList.Count; i++) tempstorage.Add(TotalOrderList[i]);
-            }
-             ComboBoxEntries = tempstorage;
+            ComboBox_Tooltip = $"Select an order number, displaying {ComboBoxEntries.Count} of the total {TotalOrderList.Count} results";
         }
         #endregion
         
@@ -173,7 +197,7 @@ namespace UiApp
             }
             PopulateTotalOrders();
             DefaultComboBox();
-            InfoMessage = "Found " + TotalOrderList.Count + " results matching filter";
+            InfoMessage = "Found " + TotalOrderList.Count + " results matching filter!";
         }
         #region Database Query Logic
         public void FetchOrderDetails(int order_number, MySqlConnection dbConnection)

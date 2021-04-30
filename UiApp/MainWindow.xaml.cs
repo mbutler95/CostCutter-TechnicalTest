@@ -23,9 +23,8 @@ namespace UiApp
         public MainWindow()
         {
             this.DataContext = DatabaseModel;
-            DatabaseModel.PopulateTotalOrders();
             InitializeComponent();
-            
+            DatabaseModel.PopulateTotalOrders();
         }
 
         private DatabaseConnector _databaseModel = new();
@@ -39,25 +38,25 @@ namespace UiApp
                 int searchnum = Int32.Parse(OrderComboBox.Text);
                 if (searchnum > 0 && searchnum < 30_000)
                 {
-                    DatabaseModel.UpdateInfoLabel("Finding Order Number " + searchnum);
+                    DatabaseModel.UpdateInfoLabel("Finding order number " + searchnum);
                     DatabaseModel.Find(searchnum);
                 }
                 else throw new FormatException();
             }
             catch (Exception)
             {
-                DatabaseModel.UpdateInfoLabel("Invalid Search");
+                DatabaseModel.UpdateInfoLabel("Invalid search");
             }
         }
 
-        private void Clear_Click(object sender, RoutedEventArgs e)
+        private void Filter_Reset_Click(object sender, RoutedEventArgs e)
         {
             After.IsChecked = false;
             Before.IsChecked = false;
             DateSelector.SelectedDate = null;
-            DatabaseModel.UpdateInfoLabel("");
             OrderComboBox.Text = "";
             DatabaseModel.Filter = "";
+            FilterExpander.IsExpanded = false;
             DatabaseModel.PopulateTotalOrders();
             DatabaseModel.DefaultComboBox();
         }
@@ -69,18 +68,46 @@ namespace UiApp
             {
                 SelectedDate = (DateTime)DateSelector.SelectedDate;
                 DatabaseModel.ApplyFilters(Before.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
+                FilterExpander.IsExpanded = false;
             }
             else
             {
-                DatabaseModel.UpdateInfoLabel("Enter A Date");
+                DatabaseModel.UpdateInfoLabel("Please enter a date");
             }
             
             
         }
-
         private void OrderComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             DatabaseModel.UpdateComboBox(OrderComboBox.Text);
+            OrderComboBox.IsDropDownOpen = true;
+        }
+
+        private void OrderComboBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            FilterExpander.IsExpanded = false;
+        }
+
+        private void Button_GotFocus(object sender, RoutedEventArgs e)
+        {
+            FilterExpander.IsExpanded = false;
+        }
+
+        private void Reset_Button_Click(object sender, RoutedEventArgs e)
+        {
+            OrderComboBox.Text = "";
+            OrderComboBox.IsDropDownOpen = false;
+            DatabaseModel.ResetSearch();
+        }
+
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DatabaseModel.UpdateInfoLabel("");
+        }
+
+        private void OrderComboBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            OrderComboBox.IsDropDownOpen = false;
         }
     }
 }

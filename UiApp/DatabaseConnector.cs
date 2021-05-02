@@ -33,6 +33,8 @@ namespace UiApp
 
         private Customer _customer_details;
 
+        
+
         public Customer Customer_Details { get => _customer_details; set { _customer_details = value; OnPropertyChanged("Customer_Details"); } }
 
         private Branch _branch_details;
@@ -40,32 +42,48 @@ namespace UiApp
 
         #endregion
 
+        private string _resultsmessage;
+        public string ResultsMessage { get => _resultsmessage; set { _resultsmessage = value; OnPropertyChanged("ResultsMessage"); } }
+        
         private string _filter;
         public string Filter { get => _filter; set => _filter = value; }
 
         private string _combobox_tooltip;
         public string ComboBox_Tooltip { get => _combobox_tooltip; set { _combobox_tooltip = value; OnPropertyChanged("ComboBox_ToolTip"); } }
 
-        #region Date Error Label
-        private string _dateError;
-        public string DateError { get =>_dateError; set { _dateError = value; OnPropertyChanged("DateError"); } }
-        private bool _dateErrorImage;
-        public bool DateErrorImage { get => _dateErrorImage; set { _dateErrorImage = value; OnPropertyChanged("DateErrorImage"); } }
+        #region Filter Error Label
+        private string _filterError;
+        public string FilterError { get =>_filterError; set { _filterError = value; OnPropertyChanged("FilterError"); } }
 
-        internal void ShowDateError(string v) 
+        private bool _filterErrorImage;
+        public bool FilterErrorImage { get => _filterErrorImage; set { _filterErrorImage = value; OnPropertyChanged("FilterErrorImage"); } }
+
+        internal void ShowFilterError(string v) 
         { 
-            DateError = v;
+            FilterError = v;
             if (v.Length > 2)
             {
-                DateErrorImage = true;
+                FilterErrorImage = true;
             }
-            else DateErrorImage = false;
+            else FilterErrorImage = false;
+        }
+        private string _filtersApplied;
+        public string FiltersApplied { get => _filtersApplied; set { _filtersApplied = value; OnPropertyChanged("FiltersApplied"); } }
+
+        private bool _filterSuccessImage;
+        public bool FilterSuccessImage { get => _filterSuccessImage; set { _filterSuccessImage = value; OnPropertyChanged("FilterSuccessImage"); } }
+
+        internal void ShowFiltersApplied(string v)
+        {
+            FiltersApplied = v;
+            if (v.Length > 1)
+            {
+                FilterSuccessImage = true;
+            }
+            else FilterSuccessImage = false;
         }
         #endregion
-
-        private string _resultsmessage;
-        public string ResultsMessage { get => _resultsmessage; set { _resultsmessage = value; OnPropertyChanged("ResultsMessage"); } }
-
+        
         #region SearchErrorLabel
         private string _invalidSearchLabel;
         public string InvalidSearchLabel { get => _invalidSearchLabel; set { _invalidSearchLabel = value; OnPropertyChanged("InvalidSearchLabel"); } }
@@ -211,7 +229,7 @@ namespace UiApp
 
         }
 
-        internal void ApplyFilters(bool before, bool after, DateTime selected_date)
+        internal void ApplyFilters(bool before, bool on, bool after, DateTime selected_date)
         {
             string DateString = selected_date.ToString("yyyy-MM-dd");
             string ShortDate = selected_date.ToShortDateString();
@@ -220,18 +238,25 @@ namespace UiApp
                 Filter = $"WHERE order_date <= '{DateString}'";
                 PopulateTotalOrders();
                 ResultsMessage = $"{TotalOrderList.Count} results before {ShortDate}";
+                ShowFiltersApplied("Filters Applied");
+            }
+            else if (on)
+            {
+                Filter = $"WHERE order_date = '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results on {ShortDate}";
+                ShowFiltersApplied("Filters Applied");
             }
             else if (after)
             {
                 Filter = $"WHERE order_date >= '{DateString}'";
                 PopulateTotalOrders();
                 ResultsMessage = $"{TotalOrderList.Count} results after {ShortDate}";
+                ShowFiltersApplied("Filters Applied");
             }
             else
             {
-                Filter = $"WHERE order_date = '{DateString}'";
-                PopulateTotalOrders();
-                ResultsMessage = $"{TotalOrderList.Count} results on {ShortDate}";
+                ShowFilterError("Please select a time filter");
             }
         }
 

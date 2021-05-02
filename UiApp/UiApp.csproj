@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <None Remove="ErrorSymbol.png" />
+    <None Remove="Images\SuccessImage.png" />
+    <None Remove="SuccessImage.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="ErrorSymbol.png" />
+    <Resource Include="Images\ErrorSymbol.png" />
+    <Resource Include="Images\SuccessImage.png" />
   </ItemGroup>
 
   <ItemGroup>

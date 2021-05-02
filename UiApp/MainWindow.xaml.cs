@@ -34,7 +34,9 @@ namespace UiApp
         private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             DatabaseModel.InvalidSearch("");
-            DatabaseModel.ShowDateError("");
+            DatabaseModel.ShowFilterError("");
+            DatabaseModel.ShowFiltersApplied("");
+            
         }
         private void Find_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -58,10 +60,10 @@ namespace UiApp
         {
             After.IsChecked = false;
             Before.IsChecked = false;
+            On.IsChecked = false;
             DateSelector.SelectedDate = null;
             OrderComboBox.Text = "";
             DatabaseModel.Filter = null;
-            FilterExpander.IsExpanded = false;
             DatabaseModel.PopulateTotalOrders();
         }
 
@@ -71,11 +73,11 @@ namespace UiApp
             if (DateSelector.SelectedDate != null)
             {
                 SelectedDate = (DateTime)DateSelector.SelectedDate;
-                DatabaseModel.ApplyFilters(Before.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
+                DatabaseModel.ApplyFilters(Before.IsChecked ?? false, On.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
             }
             else
             {
-                DatabaseModel.ShowDateError("Please enter a date");
+                DatabaseModel.ShowFilterError("Please enter a date");
             }
             
             

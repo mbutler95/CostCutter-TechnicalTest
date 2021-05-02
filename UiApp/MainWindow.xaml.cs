@@ -31,6 +31,11 @@ namespace UiApp
 
         public DatabaseConnector DatabaseModel { get => _databaseModel; set => _databaseModel = value; }
 
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DatabaseModel.InvalidSearch("");
+            DatabaseModel.ShowDateError("");
+        }
         private void Find_Button_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -38,14 +43,14 @@ namespace UiApp
                 int searchnum = Int32.Parse(OrderComboBox.Text);
                 if (searchnum > 0 && searchnum < 30_000)
                 {
-                    DatabaseModel.UpdateInfoLabel("Finding order number " + searchnum);
                     DatabaseModel.Find(searchnum);
+                    DatabaseModel.UpdateSearchLabel("Displaying details for order number " + searchnum);
                 }
                 else throw new FormatException();
             }
             catch (Exception)
             {
-                DatabaseModel.UpdateInfoLabel("Invalid search");
+                DatabaseModel.InvalidSearch("Invalid search");
             }
         }
 
@@ -55,7 +60,7 @@ namespace UiApp
             Before.IsChecked = false;
             DateSelector.SelectedDate = null;
             OrderComboBox.Text = "";
-            DatabaseModel.Filter = "";
+            DatabaseModel.Filter = null;
             FilterExpander.IsExpanded = false;
             DatabaseModel.PopulateTotalOrders();
         }
@@ -67,11 +72,10 @@ namespace UiApp
             {
                 SelectedDate = (DateTime)DateSelector.SelectedDate;
                 DatabaseModel.ApplyFilters(Before.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
-                FilterExpander.IsExpanded = false;
             }
             else
             {
-                DatabaseModel.UpdateInfoLabel("Please enter a date");
+                DatabaseModel.ShowDateError("Please enter a date");
             }
             
             
@@ -84,6 +88,7 @@ namespace UiApp
 
         private void OrderComboBox_GotFocus(object sender, RoutedEventArgs e)
         {
+            OrderComboBox.IsDropDownOpen = true;
             FilterExpander.IsExpanded = false;
         }
 
@@ -96,13 +101,11 @@ namespace UiApp
         {
             OrderComboBox.Text = "";
             OrderComboBox.IsDropDownOpen = false;
+            DatabaseModel.UpdateSearchLabel("");
             DatabaseModel.ResetSearch();
         }
 
-        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DatabaseModel.UpdateInfoLabel("");
-        }
+        
 
         private void OrderComboBox_LostFocus(object sender, RoutedEventArgs e)
         {

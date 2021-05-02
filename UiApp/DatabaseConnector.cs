@@ -44,36 +44,65 @@ namespace UiApp
         public string Filter { get => _filter; set => _filter = value; }
 
         private string _combobox_tooltip;
-        public string ComboBox_Tooltip
-        {
-            get { return _combobox_tooltip; }
-            set
+        public string ComboBox_Tooltip { get => _combobox_tooltip; set { _combobox_tooltip = value; OnPropertyChanged("ComboBox_ToolTip"); } }
+
+        #region Date Error Label
+        private string _dateError;
+        public string DateError { get =>_dateError; set { _dateError = value; OnPropertyChanged("DateError"); } }
+        private bool _dateErrorImage;
+        public bool DateErrorImage { get => _dateErrorImage; set { _dateErrorImage = value; OnPropertyChanged("DateErrorImage"); } }
+
+        internal void ShowDateError(string v) 
+        { 
+            DateError = v;
+            if (v.Length > 2)
             {
-                _combobox_tooltip = value;
-                OnPropertyChanged("ComboBox_ToolTip");
+                DateErrorImage = true;
             }
+            else DateErrorImage = false;
+        }
+        #endregion
+
+        private string _resultsmessage;
+        public string ResultsMessage { get => _resultsmessage; set { _resultsmessage = value; OnPropertyChanged("ResultsMessage"); } }
+
+        #region SearchErrorLabel
+        private string _invalidSearchLabel;
+        public string InvalidSearchLabel { get => _invalidSearchLabel; set { _invalidSearchLabel = value; OnPropertyChanged("InvalidSearchLabel"); } }
+
+        private bool _invalidSearchImage;
+        public bool InvalidSearchImage { get => _invalidSearchImage; set { _invalidSearchImage = value; OnPropertyChanged("InvalidSearchImage"); } }
+
+        internal void InvalidSearch(string v)
+        {
+            InvalidSearchLabel = v;
+            if (v.Length > 2)
+            {
+                InvalidSearchImage = true;
+            }
+            else InvalidSearchImage = false;
+        }
+        #endregion
+
+        private string _searchLabel;
+        public string SearchLabel { get => _searchLabel; set { _searchLabel = value; OnPropertyChanged("SearchLabel"); } }
+        internal void UpdateSearchLabel(string v)
+        {
+            SearchLabel = v;
         }
 
-        private string _infomessage; 
-        public string InfoMessage
+        internal void ResetSearch()
         {
-            get { return _infomessage; }
-            set
-            {
-                _infomessage = value;
-                OnPropertyChanged("InfoMessage");
-            }
-        }
-
-        internal void UpdateInfoLabel(string v)
-        {
-            InfoMessage = v;
+            Order_Details = null;
+            Customer_Details = null;
+            Branch_Details = null;
         }
         #region Combobox Updating and Populating
 
         private List<int> TotalOrderList = new();
 
         private ObservableCollection<int> _comboboxentries;
+        
         public ObservableCollection<int> ComboBoxEntries
         {
             get { return _comboboxentries; }
@@ -92,16 +121,17 @@ namespace UiApp
             try
             {
                 dbConnection.Open();
-                var sql = "SELECT order_number from orders "+ Filter + " ORDER BY order_number";
+                var sql = "SELECT order_number from orders " + Filter + " ORDER BY order_number";
                 result = dbConnection.Query(sql).AsList();
                 foreach (var row in result)
                 {
                     TotalOrderList.Add((int)row.order_number);
                 }
+                if (Filter == null) ResultsMessage = $"{TotalOrderList.Count} results";
             }
             catch (MySqlException)
             {
-                InfoMessage = "Unable to esablish a Connection with the Server.";
+                throw new Exception();
             }
             finally
             {
@@ -109,13 +139,6 @@ namespace UiApp
             }
             DefaultComboBox();
             UpdateComboBoxTooltip();
-        }
-
-        internal void ResetSearch()
-        {
-            Order_Details = null;
-            Customer_Details = null;
-            Branch_Details = null;
         }
 
         internal void DefaultComboBox()
@@ -136,9 +159,9 @@ namespace UiApp
             ObservableCollection<int> tempstorage = new();
             int i = 0;
             foreach (int num in TotalOrderList)
-            {    
-                if(i < 200) 
-                { 
+            {
+                if (i < 200)
+                {
                     string tester = "" + num;
                     if (tester.StartsWith(text))
                     {
@@ -159,45 +182,59 @@ namespace UiApp
             ComboBox_Tooltip = $"Select an order number, displaying {ComboBoxEntries.Count} of the total {TotalOrderList.Count} results";
         }
         #endregion
-        
+
         public void Find(int order_number)
         {
-            var dbConnection = new DatabaseConnector().GetConnection;
-            try
+            if (order_number <= 30_000 && order_number > 0)
             {
-                dbConnection.Open();
-                FetchOrderDetails(order_number, dbConnection);
-                FetchCustomerDetails(Order_Details.Customer_number, dbConnection);
-                FetchBranchDetails(Order_Details.Employee_number, dbConnection);
+                var dbConnection = new DatabaseConnector().GetConnection;
+                try
+                {
+                    dbConnection.Open();
+                    FetchOrderDetails(order_number, dbConnection);
+                    FetchCustomerDetails(Order_Details.Customer_number, dbConnection);
+                    FetchBranchDetails(Order_Details.Employee_number, dbConnection);
+                }
+                catch (MySqlException)
+                {
+                    throw new Exception();
+                }
+                finally
+                {
+                    dbConnection.Close();
+                }
             }
-            catch (MySqlException)
+            else
             {
-                InfoMessage = "Unable to esablish a Connection with the Server.";
+                InvalidSearchLabel = "Invalid Search";
             }
-            finally
-            {
-                dbConnection.Close();
-            }
-            
+
         }
 
         internal void ApplyFilters(bool before, bool after, DateTime selected_date)
         {
-            if(before)
+            string DateString = selected_date.ToString("yyyy-MM-dd");
+            string ShortDate = selected_date.ToShortDateString();
+            if (before)
             {
-                Filter = "WHERE order_date <= '" + selected_date.ToString("yyyy-MM-dd") +"'";
+                Filter = $"WHERE order_date <= '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results before {ShortDate}";
             }
-            else if(after)
+            else if (after)
             {
-                Filter = "WHERE order_date >= '" + selected_date.ToString("yyyy-MM-dd") + "'";
+                Filter = $"WHERE order_date >= '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results after {ShortDate}";
             }
             else
             {
-                Filter = "WHERE order_date = '" + selected_date.ToString("yyyy-MM-dd") + "'";
+                Filter = $"WHERE order_date = '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results on {ShortDate}";
             }
-            PopulateTotalOrders();
-            InfoMessage = "Found " + TotalOrderList.Count + " results matching filter!";
         }
+
         #region Database Query Logic
         public void FetchOrderDetails(int order_number, MySqlConnection dbConnection)
         {

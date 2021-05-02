@@ -14,14 +14,29 @@ using System.Windows.Shapes;
 
 namespace UiApp
 {
-    /// <summary>
-    /// Interaction logic for InitializationConnectErrorWindow.xaml
-    /// </summary>
     public partial class InitializationConnectErrorWindow : Window
     {
         public InitializationConnectErrorWindow()
         {
             InitializeComponent();
+        }
+
+        private void Close_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            Application.Current.MainWindow.Close();
+        }
+
+        private void Retry_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            MainWindow win = (MainWindow)Application.Current.MainWindow;
+            win.DatabaseModel.PopulateTotalOrders();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.MainWindow.Close();
         }
     }
 }

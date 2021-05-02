@@ -19,9 +19,29 @@ namespace UiApp
     /// </summary>
     public partial class FindConnectErrorWindow : Window
     {
-        public FindConnectErrorWindow()
+        public FindConnectErrorWindow(int searchnum)
         {
             InitializeComponent();
+            searchNum = searchnum;
+        }
+        int searchNum;
+
+        private void Close_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            Application.Current.MainWindow.Close();
+        }
+
+        private void Retry_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            MainWindow win = (MainWindow)Application.Current.MainWindow;
+            win.DatabaseModel.Find(searchNum);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.MainWindow.Close();
         }
     }
 }

@@ -19,14 +19,15 @@ namespace UiApp
     public class DatabaseConnector : INotifyPropertyChanged
     {
         private readonly string _ConnectionString = Settings.Default.DbConnectionString;
-
         public MySqlConnection GetConnection => new MySqlConnection(_ConnectionString);
-
+        #region Property Changed Event Handling
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        #endregion
+
         #region Database modelling class variables & properties
         private Order _order_details;
         public Order Order_Details { get => _order_details; set { _order_details = value; OnPropertyChanged("Order_Details"); } }
@@ -45,44 +46,8 @@ namespace UiApp
         private string _resultsmessage;
         public string ResultsMessage { get => _resultsmessage; set { _resultsmessage = value; OnPropertyChanged("ResultsMessage"); } }
         
-        private string _filter;
-        public string Filter { get => _filter; set => _filter = value; }
-
         private string _combobox_tooltip;
         public string ComboBox_Tooltip { get => _combobox_tooltip; set { _combobox_tooltip = value; OnPropertyChanged("ComboBox_ToolTip"); } }
-
-        #region Filter Error Label
-        private string _filterError;
-        public string FilterError { get =>_filterError; set { _filterError = value; OnPropertyChanged("FilterError"); } }
-
-        private bool _filterErrorImage;
-        public bool FilterErrorImage { get => _filterErrorImage; set { _filterErrorImage = value; OnPropertyChanged("FilterErrorImage"); } }
-
-        internal void ShowFilterError(string v) 
-        { 
-            FilterError = v;
-            if (v.Length > 2)
-            {
-                FilterErrorImage = true;
-            }
-            else FilterErrorImage = false;
-        }
-        private string _filtersApplied;
-        public string FiltersApplied { get => _filtersApplied; set { _filtersApplied = value; OnPropertyChanged("FiltersApplied"); } }
-
-        private bool _filterSuccessImage;
-        public bool FilterSuccessImage { get => _filterSuccessImage; set { _filterSuccessImage = value; OnPropertyChanged("FilterSuccessImage"); } }
-
-        internal void ShowFiltersApplied(string v)
-        {
-            FiltersApplied = v;
-            if (v.Length > 1)
-            {
-                FilterSuccessImage = true;
-            }
-            else FilterSuccessImage = false;
-        }
-        #endregion
         
         #region SearchErrorLabel
         private string _invalidSearchLabel;
@@ -149,7 +114,7 @@ namespace UiApp
             }
             catch (MySqlException)
             {
-                throw new Exception();
+                MainWindow.InitConnectionError();
             }
             finally
             {
@@ -212,10 +177,11 @@ namespace UiApp
                     FetchOrderDetails(order_number, dbConnection);
                     FetchCustomerDetails(Order_Details.Customer_number, dbConnection);
                     FetchBranchDetails(Order_Details.Employee_number, dbConnection);
+                    UpdateSearchLabel("Displaying details for order number " + order_number);
                 }
                 catch (MySqlException)
                 {
-                    throw new Exception();
+                    MainWindow.FindConnectionError(order_number);
                 }
                 finally
                 {
@@ -224,40 +190,9 @@ namespace UiApp
             }
             else
             {
-                InvalidSearchLabel = "Invalid Search";
+                InvalidSearch("Invalid Search");
             }
 
-        }
-
-        internal void ApplyFilters(bool before, bool on, bool after, DateTime selected_date)
-        {
-            string DateString = selected_date.ToString("yyyy-MM-dd");
-            string ShortDate = selected_date.ToShortDateString();
-            if (before)
-            {
-                Filter = $"WHERE order_date <= '{DateString}'";
-                PopulateTotalOrders();
-                ResultsMessage = $"{TotalOrderList.Count} results before {ShortDate}";
-                ShowFiltersApplied("Filters Applied");
-            }
-            else if (on)
-            {
-                Filter = $"WHERE order_date = '{DateString}'";
-                PopulateTotalOrders();
-                ResultsMessage = $"{TotalOrderList.Count} results on {ShortDate}";
-                ShowFiltersApplied("Filters Applied");
-            }
-            else if (after)
-            {
-                Filter = $"WHERE order_date >= '{DateString}'";
-                PopulateTotalOrders();
-                ResultsMessage = $"{TotalOrderList.Count} results after {ShortDate}";
-                ShowFiltersApplied("Filters Applied");
-            }
-            else
-            {
-                ShowFilterError("Please select a time filter");
-            }
         }
 
         #region Database Query Logic
@@ -281,6 +216,73 @@ namespace UiApp
             Branch_Details = dbConnection.QuerySingle<Branch>(sql);
         }
         #endregion
+
+        private string _filter;
+        public string Filter { get => _filter; set => _filter = value; }
+        internal void ApplyFilters(bool before, bool on, bool after, DateTime selected_date)
+        {
+            string DateString = selected_date.ToString("yyyy-MM-dd");
+            string ShortDate = selected_date.ToShortDateString();
+            if (before)
+            {
+                Filter = $"WHERE order_date <= '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results before {ShortDate}";
+                ShowFilterApplied("Filters Applied");
+            }
+            else if (on)
+            {
+                Filter = $"WHERE order_date = '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results on {ShortDate}";
+                ShowFilterApplied("Filters Applied");
+            }
+            else if (after)
+            {
+                Filter = $"WHERE order_date >= '{DateString}'";
+                PopulateTotalOrders();
+                ResultsMessage = $"{TotalOrderList.Count} results after {ShortDate}";
+                ShowFilterApplied("Filters Applied");
+            }
+            else
+            {
+                ShowFilterError("Please select a time filter");
+            }
+        }
+        #region Updating Filtering Labels
+        private string _filterError;
+        public string FilterError { get => _filterError; set { _filterError = value; OnPropertyChanged("FilterError"); } }
+
+        private bool _filterErrorImage;
+        public bool FilterErrorImage { get => _filterErrorImage; set { _filterErrorImage = value; OnPropertyChanged("FilterErrorImage"); } }
+
+        internal void ShowFilterError(string v)
+        {
+            FilterError = v;
+            if (v.Length > 2)
+            {
+                FilterErrorImage = true;
+            }
+            else FilterErrorImage = false;
+        }
+        private string _filtersApplied;
+        public string FiltersApplied { get => _filtersApplied; set { _filtersApplied = value; OnPropertyChanged("FiltersApplied"); } }
+
+        private bool _filterSuccessImage;
+        public bool FilterSuccessImage { get => _filterSuccessImage; set { _filterSuccessImage = value; OnPropertyChanged("FilterSuccessImage"); } }
+
+        internal void ShowFilterApplied(string v)
+        {
+            FiltersApplied = v;
+            if (v.Length > 1)
+            {
+                FilterSuccessImage = true;
+            }
+            else FilterSuccessImage = false;
+        }
+        #endregion
+
+
 
     }
 }

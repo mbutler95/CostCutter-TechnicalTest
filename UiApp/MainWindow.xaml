@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UiApp"
         d:DataContext="{d:DesignInstance Type=local:DatabaseConnector}"
         mc:Ignorable="d"
-        Title="CostCutter Order Search Directory" Height="740" MinHeight ="420" Width="800" MinWidth="450" ResizeMode="CanResizeWithGrip" PreviewMouseDown="Window_PreviewMouseDown">
+        Title="CostCutter Order Search Directory" Height="740" MinHeight ="420" Width="800" MinWidth="450" ResizeMode="CanResizeWithGrip" PreviewMouseDown="Window_PreviewMouseDown" Loaded="Window_Loaded">
     <Viewbox>
         <Grid>
             <Grid.Resources>
@@ -35,9 +35,9 @@
 
             <Button x:Name="Find_Button" HorizontalAlignment="Left" Content="Find" Margin="130,56,0,0" Grid.Row="1" Click="Find_Button_Click" Width="60" GotFocus="Button_GotFocus" Height="29" VerticalAlignment="Top"/>
             <Button x:Name="Reset_Button" HorizontalAlignment="Left" Content="Reset Search" Margin="197,56,0,0" Grid.Row="1" Click="Reset_Button_Click" Width="75" GotFocus="Button_GotFocus" Height="29" VerticalAlignment="Top"/>
-            <TextBlock x:Name="InvalidSearchBox" HorizontalAlignment="Left" Margin="138,0,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" Padding="5,5,10,10"
-                   VerticalAlignment="Center" Height="24" Width="65" Text="{Binding InvalidSearchLabel}" FontSize ="8" TextAlignment="Left" Foreground="Red"/>
-            <Image x:Name="InvalidSearchImage" HorizontalAlignment="Left" Height="14" Margin="127,40,0,0" Grid.Row="1" VerticalAlignment="Top" Width="13" Source="Images/ErrorSymbol.png" Visibility="{Binding InvalidSearchImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock x:Name="InvalidSearchBox" HorizontalAlignment="Left" Margin="138,37,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" Padding="5,5,10,10"
+                   VerticalAlignment="Top" Height="24" Width="65" Text="{Binding InvalidSearchLabel}" FontSize ="8" TextAlignment="Left" Foreground="Red"/>
+            <Image x:Name="InvalidSearchImage" HorizontalAlignment="Left" Height="14" Margin="128,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="13" Source="Images/ErrorSymbol.png" Visibility="{Binding InvalidSearchImage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
             <Label Content="Filter results by date" Height="28" Margin="272,0,29,58" Grid.Row="1" 
                             VerticalAlignment="Bottom"/>

@@ -22,9 +22,27 @@ namespace UiApp
     {
         public MainWindow()
         {
-            this.DataContext = DatabaseModel;
             InitializeComponent();
+            this.DataContext = DatabaseModel;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             DatabaseModel.PopulateTotalOrders();
+        }
+
+        public static void InitConnectionError()
+        {
+            InitializationConnectErrorWindow InitError = new();
+            InitError.Owner = Application.Current.MainWindow;
+            InitError.ShowDialog();
+        }
+
+        public static void FindConnectionError(int searchnum)
+        {
+            FindConnectErrorWindow FindError = new(searchnum);
+            FindError.Owner = Application.Current.MainWindow;
+            FindError.ShowDialog();
         }
 
         private DatabaseConnector _databaseModel = new();
@@ -35,7 +53,7 @@ namespace UiApp
         {
             DatabaseModel.InvalidSearch("");
             DatabaseModel.ShowFilterError("");
-            DatabaseModel.ShowFiltersApplied("");
+            DatabaseModel.ShowFilterApplied("");
             
         }
         private void Find_Button_Click(object sender, RoutedEventArgs e)
@@ -43,16 +61,11 @@ namespace UiApp
             try
             {
                 int searchnum = Int32.Parse(OrderComboBox.Text);
-                if (searchnum > 0 && searchnum < 30_000)
-                {
-                    DatabaseModel.Find(searchnum);
-                    DatabaseModel.UpdateSearchLabel("Displaying details for order number " + searchnum);
-                }
-                else throw new FormatException();
+                DatabaseModel.Find(searchnum);
             }
-            catch (Exception)
+            catch (FormatException)
             {
-                DatabaseModel.InvalidSearch("Invalid search");
+                DatabaseModel.InvalidSearch("Invalid Search");
             }
         }
 
@@ -113,5 +126,6 @@ namespace UiApp
         {
             OrderComboBox.IsDropDownOpen = false;
         }
+
     }
 }

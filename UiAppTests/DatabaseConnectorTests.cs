@@ -45,6 +45,7 @@ namespace UiApp.Tests
 
         }
         #endregion
+
         #region Find Tests
         [TestMethod()]
         public void FindTest1()

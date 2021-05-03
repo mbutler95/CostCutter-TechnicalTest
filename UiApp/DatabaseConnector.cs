@@ -108,15 +108,18 @@ namespace UiApp
             IEnumerable<dynamic> result;
             try
             {
+                TotalOrderList = new();
                 dbConnection.Open();
                 var sql = "SELECT order_number from orders " + Filter + " ORDER BY order_number";
                 result = dbConnection.Query(sql).AsList();
-                TotalOrderList = new();
+                
                 foreach (var row in result)
                 {
                     TotalOrderList.Add((int)row.order_number);
                 }
                 if (Filter == null) ResultsMessage = $"{TotalOrderList.Count} results";
+                DefaultComboBox();
+                UpdateComboBoxTooltip();
             }
             catch (MySqlException)
             {
@@ -126,8 +129,7 @@ namespace UiApp
             {
                 dbConnection.Close();
             }
-            DefaultComboBox();
-            UpdateComboBoxTooltip();
+            
         }
 
         internal void DefaultComboBox()

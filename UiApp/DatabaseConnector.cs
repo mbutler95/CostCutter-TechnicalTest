@@ -108,11 +108,10 @@ namespace UiApp
             IEnumerable<dynamic> result;
             try
             {
-                TotalOrderList = new();
                 dbConnection.Open();
                 var sql = "SELECT order_number from orders " + Filter + " ORDER BY order_number";
                 result = dbConnection.Query(sql).AsList();
-                
+                TotalOrderList = new();
                 foreach (var row in result)
                 {
                     TotalOrderList.Add((int)row.order_number);

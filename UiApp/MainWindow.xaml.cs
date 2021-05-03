@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace UiApp
 {
@@ -31,7 +32,7 @@ namespace UiApp
         public DatabaseConnector DatabaseModel { get => _databaseModel; set => _databaseModel = value; }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DatabaseModel.PopulateTotalOrders();
+            this.Dispatcher.BeginInvoke((Action)(() => DatabaseModel.PopulateTotalOrders()));
         }
 
         public static void InitConnectionError()
@@ -60,7 +61,7 @@ namespace UiApp
             try
             {
                 int searchnum = Int32.Parse(OrderComboBox.Text);
-                DatabaseModel.Find(searchnum);
+                this.Dispatcher.BeginInvoke((Action)(() => DatabaseModel.Find(searchnum)));
             }
             catch (Exception)
             {
@@ -84,7 +85,7 @@ namespace UiApp
             DateSelector.SelectedDate = null;
             OrderComboBox.Text = "";
             DatabaseModel.Filter = null;
-            DatabaseModel.PopulateTotalOrders();
+            this.Dispatcher.BeginInvoke((Action)(() => DatabaseModel.PopulateTotalOrders()));
         }
 
         private void Apply_Click(object sender, RoutedEventArgs e)
@@ -93,7 +94,7 @@ namespace UiApp
             if (DateSelector.SelectedDate != null)
             {
                 SelectedDate = (DateTime)DateSelector.SelectedDate;
-                DatabaseModel.ApplyFilters(Before.IsChecked ?? false, On.IsChecked ?? false, After.IsChecked ?? false, SelectedDate);
+                this.Dispatcher.BeginInvoke((Action)(() => DatabaseModel.ApplyFilters(Before.IsChecked ?? false, On.IsChecked ?? false, After.IsChecked ?? false, SelectedDate)));
             }
             else
             {
@@ -103,7 +104,7 @@ namespace UiApp
 
         private void OrderComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DatabaseModel.UpdateComboBox(OrderComboBox.Text);
+            this.Dispatcher.BeginInvoke((Action)(() => DatabaseModel.UpdateComboBox(OrderComboBox.Text)));
             OrderComboBox.IsDropDownOpen = true;
         }
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UiApp"
         d:DataContext="{d:DesignInstance Type=local:DatabaseConnector}"
         mc:Ignorable="d"
-        Title="CostCutter Order Search Directory" Height="740" MinHeight ="420" Width="800" MinWidth="450" ResizeMode="CanResizeWithGrip" PreviewMouseDown="Window_PreviewMouseDown" Loaded="Window_Loaded">
+        Title="Order Search Directory" Height="740" MinHeight ="420" Width="800" MinWidth="450" ResizeMode="CanResizeWithGrip" PreviewMouseDown="Window_PreviewMouseDown" Loaded="Window_Loaded">
     <Viewbox>
         <Grid>
             <Grid.Resources>

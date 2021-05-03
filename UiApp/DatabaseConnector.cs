@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ namespace UiApp
     {
         private readonly string _ConnectionString = Settings.Default.DbConnectionString;
         public MySqlConnection GetConnection => new MySqlConnection(_ConnectionString);
+
         #region Property Changed Event Handling
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
@@ -42,6 +44,8 @@ namespace UiApp
         public Branch Branch_Details { get => _branch_details; set { _branch_details = value; OnPropertyChanged("Branch_Details"); } }
 
         #endregion
+
+        #region Updating Ui Binding Variables
 
         private string _resultsmessage;
         public string ResultsMessage { get => _resultsmessage; set { _resultsmessage = value; OnPropertyChanged("ResultsMessage"); } }
@@ -74,6 +78,8 @@ namespace UiApp
             SearchLabel = v;
         }
 
+        #endregion
+
         internal void ResetSearch()
         {
             Order_Details = null;
@@ -82,7 +88,8 @@ namespace UiApp
         }
         #region Combobox Updating and Populating
 
-        private List<int> TotalOrderList = new();
+        private List<int> _totalOrderList;
+        public List<int> TotalOrderList { get => _totalOrderList; set => _totalOrderList = value; }
 
         private ObservableCollection<int> _comboboxentries;
         
@@ -96,9 +103,8 @@ namespace UiApp
             }
         }
 
-        internal void PopulateTotalOrders()
+        public void PopulateTotalOrders()
         {
-            TotalOrderList = new();
             var dbConnection = new DatabaseConnector().GetConnection;
             IEnumerable<dynamic> result;
             try
@@ -106,6 +112,7 @@ namespace UiApp
                 dbConnection.Open();
                 var sql = "SELECT order_number from orders " + Filter + " ORDER BY order_number";
                 result = dbConnection.Query(sql).AsList();
+                TotalOrderList = new();
                 foreach (var row in result)
                 {
                     TotalOrderList.Add((int)row.order_number);
@@ -141,24 +148,29 @@ namespace UiApp
         {
             ObservableCollection<int> tempstorage = new();
             int i = 0;
-            foreach (int num in TotalOrderList)
+            if (text == "")
             {
-                if (i < 200)
+                DefaultComboBox();
+            }
+            else
+            {
+                List<int> results = TotalOrderList.FindAll(num => num.ToString().StartsWith(text));
+               foreach (int num in results)
                 {
-                    string tester = "" + num;
-                    if (tester.StartsWith(text))
+                    if (i < 200)
                     {
                         tempstorage.Add(num);
                         i++;
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
-                else
-                {
-                    break;
-                }
+                ComboBoxEntries = tempstorage;
             }
-            ComboBoxEntries = tempstorage;
             UpdateComboBoxTooltip();
+            
         }
         internal void UpdateComboBoxTooltip()
         {
@@ -168,7 +180,8 @@ namespace UiApp
 
         public void Find(int order_number)
         {
-            if (order_number <= 30_000 && order_number > 0)
+            if (TotalOrderList == null) PopulateTotalOrders();
+            if (order_number > 0 && TotalOrderList.Contains(order_number))
             {
                 var dbConnection = new DatabaseConnector().GetConnection;
                 try
@@ -219,7 +232,7 @@ namespace UiApp
 
         private string _filter;
         public string Filter { get => _filter; set => _filter = value; }
-        internal void ApplyFilters(bool before, bool on, bool after, DateTime selected_date)
+        public void ApplyFilters(bool before, bool on, bool after, DateTime selected_date)
         {
             string DateString = selected_date.ToString("yyyy-MM-dd");
             string ShortDate = selected_date.ToShortDateString();
@@ -249,6 +262,7 @@ namespace UiApp
                 ShowFilterError("Please select a time filter");
             }
         }
+
         #region Updating Filtering Labels
         private string _filterError;
         public string FilterError { get => _filterError; set { _filterError = value; OnPropertyChanged("FilterError"); } }

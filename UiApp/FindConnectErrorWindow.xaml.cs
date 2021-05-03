@@ -38,10 +38,5 @@ namespace UiApp
             MainWindow win = (MainWindow)Application.Current.MainWindow;
             win.DatabaseModel.Find(searchNum);
         }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            Application.Current.MainWindow.Close();
-        }
     }
 }

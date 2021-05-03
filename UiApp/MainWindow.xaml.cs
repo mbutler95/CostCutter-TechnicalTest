@@ -26,6 +26,9 @@ namespace UiApp
             this.DataContext = DatabaseModel;
         }
 
+        private DatabaseConnector _databaseModel = new();
+
+        public DatabaseConnector DatabaseModel { get => _databaseModel; set => _databaseModel = value; }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DatabaseModel.PopulateTotalOrders();
@@ -45,10 +48,6 @@ namespace UiApp
             FindError.ShowDialog();
         }
 
-        private DatabaseConnector _databaseModel = new();
-
-        public DatabaseConnector DatabaseModel { get => _databaseModel; set => _databaseModel = value; }
-
         private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             DatabaseModel.InvalidSearch("");
@@ -63,10 +62,18 @@ namespace UiApp
                 int searchnum = Int32.Parse(OrderComboBox.Text);
                 DatabaseModel.Find(searchnum);
             }
-            catch (FormatException)
+            catch (Exception)
             {
                 DatabaseModel.InvalidSearch("Invalid Search");
             }
+        }
+
+        private void Reset_Button_Click(object sender, RoutedEventArgs e)
+        {
+            OrderComboBox.Text = "";
+            OrderComboBox.IsDropDownOpen = false;
+            DatabaseModel.UpdateSearchLabel("");
+            DatabaseModel.ResetSearch();
         }
 
         private void Filter_Reset_Click(object sender, RoutedEventArgs e)
@@ -91,10 +98,9 @@ namespace UiApp
             else
             {
                 DatabaseModel.ShowFilterError("Please enter a date");
-            }
-            
-            
+            }  
         }
+
         private void OrderComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             DatabaseModel.UpdateComboBox(OrderComboBox.Text);
@@ -111,17 +117,7 @@ namespace UiApp
         {
             FilterExpander.IsExpanded = false;
         }
-
-        private void Reset_Button_Click(object sender, RoutedEventArgs e)
-        {
-            OrderComboBox.Text = "";
-            OrderComboBox.IsDropDownOpen = false;
-            DatabaseModel.UpdateSearchLabel("");
-            DatabaseModel.ResetSearch();
-        }
-
-        
-
+   
         private void OrderComboBox_LostFocus(object sender, RoutedEventArgs e)
         {
             OrderComboBox.IsDropDownOpen = false;

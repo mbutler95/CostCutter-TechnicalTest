@@ -20,7 +20,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!--#region Grid Row 0-->
-            <Label Content="Order Search Directory" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="20"/>
+            <Label Content="Order Search Directory" HorizontalAlignment="Left" Margin="90,0,0,0" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="#FF004E37"/>
             <!--#endregion-->
 
             <!--#region Grid Row 1-->
@@ -28,8 +28,8 @@
 
             <Label Content="Select Order Number" HorizontalAlignment="Left" Height="30" Margin="10,0,0,56" Grid.Row="1" VerticalAlignment="Bottom" Width="124" />
             <TextBlock x:Name="ResultsBox" HorizontalAlignment="Left" Margin="7,37,0,0" Grid.Row="1" TextWrapping="WrapWithOverflow" Padding="5,5,10,10"
-                   VerticalAlignment="Top" Height="16" Width="180" Text="{Binding ResultsMessage}" FontSize ="8" TextAlignment="Left" TextDecorations="Underline"/>
-            <ComboBox x:Name="OrderComboBox" HorizontalAlignment="Left" Margin="14,56,0,0" Grid.Row="1" Width="110" IsEditable="True" HorizontalContentAlignment="Left"
+                   VerticalAlignment="Top" Height="16" Width="200" Text="{Binding ResultsMessage}" FontSize ="8" TextAlignment="Left" TextDecorations="Underline"/>
+            <ComboBox x:Name="OrderComboBox" HorizontalAlignment="Left" Margin="14,56,0,0" Grid.Row="1" Width="110" IsEditable="True" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                   StaysOpenOnEdit="True"  MaxDropDownHeight="120" ItemsSource="{Binding ComboBoxEntries}" ToolTip="{Binding ComboBox_Tooltip}" 
                   GotFocus="OrderComboBox_GotFocus" TextBoxBase.TextChanged="OrderComboBox_TextChanged" LostFocus="OrderComboBox_LostFocus" Height="29" VerticalAlignment="Top"/>
 
@@ -66,7 +66,7 @@
             <Rectangle HorizontalAlignment="Left" Height="85" Margin="5,5,5,0" Grid.Row="2" Stroke="#FFE73742" VerticalAlignment="Center" Width="420" RadiusX="10" RadiusY="10"/>
             <Label Content="Order Details :" HorizontalAlignment="Left" Margin="10,5,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold"/>
             <TextBlock x:Name="SearchBox" HorizontalAlignment="Left" Margin="101,14,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow"
-                   VerticalAlignment="Top" Height="11" Width="133" Text="{Binding SearchLabel}" FontSize ="8" TextAlignment="Left" />
+                   VerticalAlignment="Top" Height="11" Width="200" Text="{Binding SearchLabel}" FontSize ="8" TextAlignment="Left" />
 
             <Label Content="Order Number :" HorizontalAlignment="Left" Margin="10,25,0,0" Grid.Row="2" VerticalAlignment="Top"/>
             <TextBox x:Name="OrderNumber" HorizontalAlignment="Left" Margin="104,30,0,0" Grid.Row="2" TextWrapping="WrapWithOverflow" 

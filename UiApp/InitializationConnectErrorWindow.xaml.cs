@@ -34,9 +34,9 @@ namespace UiApp
             win.DatabaseModel.PopulateTotalOrders();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Application.Current.MainWindow.Close();
+            e.Cancel = true;
         }
     }
 }

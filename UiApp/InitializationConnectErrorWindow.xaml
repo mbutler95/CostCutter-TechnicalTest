@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UiApp"
         mc:Ignorable="d"
-        Title="InitializationConnectErrorWindow" Height="180" Width="250" ResizeMode="CanMinimize"
-        WindowStartupLocation="CenterOwner" Closed="Window_Closed">
+        Title="Connection Error" Height="180" Width="250" ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterOwner">
     <Viewbox>
         <Grid>
             <Button x:Name="RetryButton" Content="Retry" HorizontalAlignment="Left" Margin="43,113,0,0" VerticalAlignment="Top" Click="Retry_Button_Click" Height="40" Width="70"/>
